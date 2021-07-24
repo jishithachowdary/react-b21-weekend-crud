@@ -1,9 +1,10 @@
 import React from 'react';
-import axios from 'axios';
 import { Button, Table, Form, FormGroup } from 'reactstrap';
+import axios from 'axios';
 import './style.css';
 
 const API_URL = 'https://jsonplaceholder.typicode.com/posts';
+
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -15,7 +16,12 @@ export default class App extends React.Component {
       posts: []
     };
   }
-  //create
+
+  componentDidMount() {
+    this.getPosts();
+  }
+
+  // CREATE
   createPost = async () => {
     const { data } = await axios.post(API_URL, {
       userId: this.state.userId,
@@ -27,7 +33,7 @@ export default class App extends React.Component {
     this.setState({ posts, userId: '', title: '', body: '' });
   };
 
-  //update
+  // UPDATE
   updatePost = async () => {
     const { data } = await axios.put(`${API_URL}/${this.state.id}`, {
       userId: this.state.userId,
@@ -40,18 +46,13 @@ export default class App extends React.Component {
     this.setState({ posts, userId: '', title: '', body: '', id: '' });
   };
 
-  //Read
+  // READ
   getPosts = async () => {
     const { data } = await axios.get(API_URL);
-    // console.log(data);
     this.setState({ posts: data });
   };
 
-  componentDidMount() {
-    this.getPosts();
-  }
-
-  //delete
+  // DELETE
   deletePost = async postId => {
     await axios.delete(`${API_URL}/${postId}`);
     let posts = [...this.state.posts];
@@ -139,7 +140,7 @@ export default class App extends React.Component {
               <th>User Id</th>
               <th>Title</th>
               <th>Body</th>
-              <th>Action</th>
+              <th colspan="2">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -157,7 +158,8 @@ export default class App extends React.Component {
                     >
                       Edit
                     </Button>
-
+                  </td>
+                  <td>
                     <Button
                       color="danger"
                       onClick={() => this.deletePost(post.id)}
